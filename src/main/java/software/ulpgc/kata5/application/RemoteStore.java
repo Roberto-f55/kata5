@@ -1,7 +1,7 @@
-package software.ulpgc.kata4.application;
+package software.ulpgc.kata5.application;
 
-import software.ulpgc.kata4.architecture.io.Store;
-import software.ulpgc.kata4.architecture.model.Movie;
+import software.ulpgc.kata5.architecture.io.Store;
+import software.ulpgc.kata5.architecture.model.Movie;
 
 import java.io.*;
 import java.net.URL;
