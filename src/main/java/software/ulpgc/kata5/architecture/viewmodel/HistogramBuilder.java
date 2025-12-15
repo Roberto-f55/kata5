@@ -1,0 +1,52 @@
+package software.ulpgc.kata4.architecture.viewmodel;
+
+import software.ulpgc.kata4.architecture.model.Movie;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
+public class HistogramBuilder {
+    private final Stream<Movie> movies;
+    private final Map<String, String> labels;
+
+    public static HistogramBuilder with(Stream<Movie> movies){
+        return new HistogramBuilder(movies);
+    }
+
+    private HistogramBuilder(Stream<Movie> movies) {
+        this.labels = new HashMap<>();
+        this.movies = movies
+                .filter(m -> m.year() >= 1900)
+                .filter(m -> m.year() <= 2025);
+    }
+
+    public HistogramBuilder tittle(String label){
+        labels.put("tittle", label);
+        return this;
+    }
+
+    public HistogramBuilder x(String label){
+        labels.put("x", label);
+        return this;
+    }
+
+    public HistogramBuilder y(String label){
+        labels.put("y", label);
+        return this;
+    }
+
+    public HistogramBuilder leyend(String label){
+        labels.put("leyend", label);
+        return this;
+    }
+
+
+    public Histogram build(Function<Movie, Integer> binarize) {
+        Histogram histogram = new Histogram(labels);
+
+        movies.map(binarize).forEach(histogram::addTo);
+        return histogram;
+    }
+}
