@@ -1,30 +1,37 @@
-package software.ulpgc.kata4.application;
+package software.ulpgc.kata5.application;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import software.ulpgc.kata4.architecture.viewmodel.Histogram;
+import software.ulpgc.kata5.architecture.io.Store;
+import software.ulpgc.kata5.architecture.model.Movie;
+import software.ulpgc.kata5.architecture.viewmodel.Histogram;
+import software.ulpgc.kata5.architecture.viewmodel.HistogramBuilder;
 
 import javax.swing.*;
+import java.io.IOException;
+import java.util.Set;
+import java.util.stream.Stream;
 
 public class Dekstop extends JFrame {
+    private final Store store;
 
-
-    public static Dekstop create(){
-        return new Dekstop();
+    public static Dekstop create(Store store){
+        return new Dekstop(store);
     }
 
-    private Dekstop(){
+    private Dekstop(Store store){
+        this.store = store;
         this.setTitle("Histograma");
         this.setResizable(false);
         this.setSize(800, 600);
         this.setLocationRelativeTo(null);
     }
 
-    public Dekstop display(Histogram histogram){
-        this.getContentPane().add(chartPannelWith(histogram));
+    public Dekstop display() throws IOException {
+        this.getContentPane().add(chartPannelWith(histogram()));
         return this;
     }
 
@@ -56,5 +63,18 @@ public class Dekstop extends JFrame {
         return serie;
     }
 
+    private Histogram histogram() throws IOException {
+        Histogram histogram = HistogramBuilder.
+                with(movies(store))
+                .tittle("Histograma")
+                .x("EJEX")
+                .y("EJEY")
+                .leyend("Movies")
+                .build(m -> (m.year() / 10) * 10);
+        return histogram;
+    }
 
+    static Stream<Movie> movies(Store store) throws IOException {
+        return store.LoadAll();
+    }
 }
